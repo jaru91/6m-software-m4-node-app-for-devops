@@ -21,7 +21,6 @@ jobs:
           name: Run Tests
           command: npm test
 
-jobs:
   build-and-push:
     docker:
       - image: cimg/node:16.10
@@ -39,9 +38,7 @@ jobs:
             echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
             docker push jaru91/6m-software-m4-node-app-for-devops:latest
 
-
-
-Simple_workflows:
+workflows:
   build-and-push:
     jobs:
       - build
