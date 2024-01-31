@@ -16,3 +16,35 @@ jobs:
       - run: |
           echo "Installing dependencies...."
           npm install
+      # Add your test steps here
+      - run:
+          name: Run Tests
+          command: npm test
+
+jobs:
+  build-and-push:
+    docker:
+      - image: cimg/node:16.10
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: npm
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Build and Push Docker Image
+          command: |
+            echo "Building Docker Image...."
+            docker build -t jaru91/6m-software-m4-node-app-for-devops:latest .
+            echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+            docker push jaru91/6m-software-m4-node-app-for-devops:latest
+
+
+
+Simple_workflows:
+  build-and-push:
+    jobs:
+      - build
+      - build-and-push:
+          requires:
+            - build
